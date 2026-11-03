@@ -553,9 +553,8 @@ const confetti = (function(){
   return burst;
 })();
 
-/* Sonido: cajita musical generada en el navegador */
+/* Sonido: cajita musical renderizada a audio WAV (suena también en iPhone en modo silencio) */
 const sound = (function(){
-  let ctx = null, master = null, wet = null, timer = null, playing = false, step = 0, nextT = 0;
   const btn = document.getElementById('sound'), lbl = document.getElementById('sound-lbl');
   const f = n => 440 * Math.pow(2, (n - 69) / 12);
   // Melodía original de cuna en Do mayor (C–Am–F–G), 3/4
@@ -563,69 +562,78 @@ const sound = (function(){
     [[72,76,79],[60,67]], [[76,74,72],[57,64]], [[69,72,77],[53,60]], [[76,74,71],[55,62]],
     [[72,79,76],[60,67]], [[74,72,69],[57,64]], [[72,74,77],[53,60]], [[74,71,72],[55,67]]
   ];
-  function init(){
-    if (ctx) return true;
-    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
-    ctx = new AC();
-    master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+  const beat = .52, LOOP = bars.length * 3 * beat, SR = 22050;
+  const music = new Audio(), chimeA = new Audio(), popA = new Audio();
+  music.loop = true; music.preload = 'auto'; [music, chimeA, popA].forEach(a => a.setAttribute('playsinline', ''));
+  let ready = null, playing = false;
+
+  function wav(buf){
+    const d = buf.getChannelData(0), n = d.length, ab = new ArrayBuffer(44 + n * 2), v = new DataView(ab);
+    const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    w(0,'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8,'WAVE'); w(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true);
+    v.setUint16(22,1,true); v.setUint32(24,SR,true); v.setUint32(28,SR*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+    w(36,'data'); v.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; i++){ const s = Math.max(-1, Math.min(1, d[i])); v.setInt16(44 + i * 2, s * 32767, true); }
+    return URL.createObjectURL(new Blob([ab], {type:'audio/wav'}));
+  }
+  function chain(ctx){
+    const out = ctx.createGain(); out.connect(ctx.destination);
+    const wet = ctx.createGain(); wet.gain.value = .35;
     const delay = ctx.createDelay(); delay.delayTime.value = .32;
     const fb = ctx.createGain(); fb.gain.value = .32;
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
-    wet = ctx.createGain(); wet.gain.value = .35;
-    wet.connect(delay); delay.connect(lp); lp.connect(fb); fb.connect(delay); lp.connect(master);
-    return true;
+    wet.connect(delay); delay.connect(lp); lp.connect(fb); fb.connect(delay); lp.connect(out);
+    return {out, wet};
   }
-  function bell(midi, t, vol, len){
-    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'sine'; o.frequency.value = f(midi);
-    o2.type = 'triangle'; o2.frequency.value = f(midi) * 2.01;
-    const g2 = ctx.createGain(); g2.gain.value = .18;
+  function bell(ctx, bus, midi, t, vol, len){
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f(midi); o2.type = 'triangle'; o2.frequency.value = f(midi) * 2.01; g2.gain.value = .18;
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.0008, t + len);
-    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(master); g.connect(wet);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(bus.out); g.connect(bus.wet);
     o.start(t); o2.start(t); o.stop(t + len + .05); o2.stop(t + len + .05);
   }
-  const beat = .52;
-  function schedule(){
-    while (nextT < ctx.currentTime + 1.2){
-      const [mel, bass] = bars[Math.floor(step / 3) % bars.length], b = step % 3;
-      bell(mel[b], nextT, .16, 1.6);
-      if (b === 0) bass.forEach(n => bell(n, nextT, .07, 2.4));
-      nextT += beat; step++;
+  async function render(){
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext; if (!OAC) return false;
+    // Música: se renderizan dos vueltas y se usa la segunda, así el bucle no tiene cortes
+    const ctx = new OAC(1, Math.ceil(LOOP * 2 * SR), SR), bus = chain(ctx);
+    for (let s = 0; s < bars.length * 3 * 2; s++){
+      const [mel, bass] = bars[Math.floor(s / 3) % bars.length], t = s * beat;
+      bell(ctx, bus, mel[s % 3], t, .32, 1.6);
+      if (s % 3 === 0) bass.forEach(n => bell(ctx, bus, n, t, .14, 2.4));
     }
+    const full = await ctx.startRendering();
+    const L = Math.round(LOOP * SR), one = new AudioBuffer({length: L, numberOfChannels: 1, sampleRate: SR});
+    one.copyToChannel(full.getChannelData(0).subarray(L, L * 2), 0);
+    music.src = wav(one);
+    const c2 = new OAC(1, Math.ceil(2.2 * SR), SR), b2 = chain(c2);
+    [84,88,91,96,100].forEach((n, i) => bell(c2, b2, n, .02 + i * .07, .26, 1.4));
+    chimeA.src = wav(await c2.startRendering());
+    const c3 = new OAC(1, Math.ceil(.3 * SR), SR), o = c3.createOscillator(), g = c3.createGain();
+    o.frequency.setValueAtTime(520, 0); o.frequency.exponentialRampToValueAtTime(1300, .12);
+    g.gain.setValueAtTime(.4, 0); g.gain.exponentialRampToValueAtTime(.001, .2);
+    o.connect(g); g.connect(c3.destination); o.start(0); o.stop(.25);
+    popA.src = wav(await c3.startRendering());
+    return true;
   }
+  ready = render().catch(() => false);
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch(e){}
+
   function paint(){ btn.setAttribute('aria-pressed', String(playing)); lbl.textContent = playing ? 'Silenciar' : 'Activar música'; }
+  function play(a){ if (!a.src) return Promise.resolve(false); try { a.currentTime = 0; } catch(e){} const p = a.play(); return p ? p.then(() => true, () => false) : Promise.resolve(true); }
   function start(){
-    if (!init()) return;
-    if (ctx.state === 'suspended') ctx.resume();
-    if (playing) return;
-    playing = true; nextT = ctx.currentTime + .1;
-    master.gain.cancelScheduledValues(ctx.currentTime);
-    master.gain.setTargetAtTime(.55, ctx.currentTime, .6);
-    schedule(); timer = setInterval(schedule, 300); paint();
+    playing = true; paint();
     try { localStorage.setItem('musica', 'on'); } catch(e){}
+    const go = () => { const p = music.play(); if (p) p.catch(() => { playing = false; paint(); }); };
+    if (music.src) go(); else ready.then(ok => ok ? go() : (playing = false, paint()));
   }
   function stop(){
-    if (!ctx || !playing) return;
-    playing = false; clearInterval(timer);
-    master.gain.setTargetAtTime(0, ctx.currentTime, .25); paint();
+    playing = false; music.pause(); paint();
     try { localStorage.setItem('musica', 'off'); } catch(e){}
   }
-  function chime(){
-    if (!init()) return; if (ctx.state === 'suspended') ctx.resume();
-    const t = ctx.currentTime + .02, keep = playing;
-    if (!keep) master.gain.setTargetAtTime(.55, ctx.currentTime, .01);
-    [84,88,91,96,100].forEach((n, i) => bell(n, t + i * .07, .12, 1.4));
-    if (!keep) master.gain.setTargetAtTime(0, t + 1.6, .4);
-  }
-  function pop(){
-    if (!ctx || !playing) return;
-    const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'sine'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(1300, t + .12);
-    g.gain.setValueAtTime(.18, t); g.gain.exponentialRampToValueAtTime(.001, t + .2);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t + .25);
-  }
+  function chime(){ play(chimeA); }
+  function pop(){ if (playing) play(popA); }
   btn.addEventListener('click', () => playing ? stop() : start());
-  document.addEventListener('visibilitychange', () => { if (ctx && playing){ document.hidden ? ctx.suspend() : ctx.resume(); } });
+  document.addEventListener('visibilitychange', () => { if (!playing) return; document.hidden ? music.pause() : music.play().catch(() => {}); });
   function wanted(){ try { return localStorage.getItem('musica') !== 'off'; } catch(e){ return true; } }
   return { start, stop, chime, pop, wanted };
 })();
@@ -636,7 +644,7 @@ const sound = (function(){
   env.addEventListener('click', () => {
     if (env.classList.contains('open')) return;
     sound.chime();
-    if (sound.wanted()) setTimeout(() => sound.start(), 900);
+    if (sound.wanted()) sound.start();
     env.classList.add('open'); stage.classList.add('opened');
     env.setAttribute('aria-expanded','true'); env.setAttribute('aria-label','Invitación abierta');
     const r = env.getBoundingClientRect();
