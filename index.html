@@ -217,6 +217,22 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
 
 .reveal{transition:transform .8s cubic-bezier(.2,1,.3,1)}
 .reveal.lift{transform:translateY(22px)}
+.sound-btn{
+  position:fixed;z-index:30;
+  right:calc(16px + env(safe-area-inset-right, 0px));bottom:calc(16px + env(safe-area-inset-bottom, 0px));
+  display:flex;align-items:center;gap:8px;min-height:48px;padding:10px 16px 10px 12px;border-radius:999px;
+  background:var(--paper);color:var(--ink);border:1.5px solid var(--line);cursor:pointer;
+  font:inherit;font-size:14px;font-weight:800;box-shadow:0 10px 24px -14px rgba(74,52,38,.6);
+  transition:transform .15s;
+}
+.sound-btn:hover{transform:translateY(-2px)}
+.sound-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.sound-btn .bars{display:flex;align-items:flex-end;gap:2px;height:16px}
+.sound-btn .bars i{display:block;width:3px;height:4px;border-radius:2px;background:var(--accent)}
+.sound-btn[aria-pressed="true"] .bars i{animation:eq .9s ease-in-out infinite}
+.sound-btn[aria-pressed="true"] .bars i:nth-child(2){animation-delay:.2s}
+.sound-btn[aria-pressed="true"] .bars i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:4px}50%{height:16px}}
 #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
 
 @media (prefers-reduced-motion: reduce){
@@ -230,6 +246,7 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
 
 <div class="sky" aria-hidden="true" id="sky"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
+<button class="sound-btn" id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="sound-lbl">Activar música</span></button>
 
 <main class="wrap">
   <header class="hero">
@@ -527,11 +544,90 @@ const confetti = (function(){
   return burst;
 })();
 
+/* Sonido: cajita musical generada en el navegador */
+const sound = (function(){
+  let ctx = null, master = null, wet = null, timer = null, playing = false, step = 0, nextT = 0;
+  const btn = document.getElementById('sound'), lbl = document.getElementById('sound-lbl');
+  const f = n => 440 * Math.pow(2, (n - 69) / 12);
+  // Melodía original de cuna en Do mayor (C–Am–F–G), 3/4
+  const bars = [
+    [[72,76,79],[60,67]], [[76,74,72],[57,64]], [[69,72,77],[53,60]], [[76,74,71],[55,62]],
+    [[72,79,76],[60,67]], [[74,72,69],[57,64]], [[72,74,77],[53,60]], [[74,71,72],[55,67]]
+  ];
+  function init(){
+    if (ctx) return true;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+    const delay = ctx.createDelay(); delay.delayTime.value = .32;
+    const fb = ctx.createGain(); fb.gain.value = .32;
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
+    wet = ctx.createGain(); wet.gain.value = .35;
+    wet.connect(delay); delay.connect(lp); lp.connect(fb); fb.connect(delay); lp.connect(master);
+    return true;
+  }
+  function bell(midi, t, vol, len){
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f(midi);
+    o2.type = 'triangle'; o2.frequency.value = f(midi) * 2.01;
+    const g2 = ctx.createGain(); g2.gain.value = .18;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .008); g.gain.exponentialRampToValueAtTime(.0008, t + len);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(master); g.connect(wet);
+    o.start(t); o2.start(t); o.stop(t + len + .05); o2.stop(t + len + .05);
+  }
+  const beat = .52;
+  function schedule(){
+    while (nextT < ctx.currentTime + 1.2){
+      const [mel, bass] = bars[Math.floor(step / 3) % bars.length], b = step % 3;
+      bell(mel[b], nextT, .16, 1.6);
+      if (b === 0) bass.forEach(n => bell(n, nextT, .07, 2.4));
+      nextT += beat; step++;
+    }
+  }
+  function paint(){ btn.setAttribute('aria-pressed', String(playing)); lbl.textContent = playing ? 'Silenciar' : 'Activar música'; }
+  function start(){
+    if (!init()) return;
+    if (ctx.state === 'suspended') ctx.resume();
+    if (playing) return;
+    playing = true; nextT = ctx.currentTime + .1;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setTargetAtTime(.55, ctx.currentTime, .6);
+    schedule(); timer = setInterval(schedule, 300); paint();
+    try { localStorage.setItem('musica', 'on'); } catch(e){}
+  }
+  function stop(){
+    if (!ctx || !playing) return;
+    playing = false; clearInterval(timer);
+    master.gain.setTargetAtTime(0, ctx.currentTime, .25); paint();
+    try { localStorage.setItem('musica', 'off'); } catch(e){}
+  }
+  function chime(){
+    if (!init()) return; if (ctx.state === 'suspended') ctx.resume();
+    const t = ctx.currentTime + .02, keep = playing;
+    if (!keep) master.gain.setTargetAtTime(.55, ctx.currentTime, .01);
+    [84,88,91,96,100].forEach((n, i) => bell(n, t + i * .07, .12, 1.4));
+    if (!keep) master.gain.setTargetAtTime(0, t + 1.6, .4);
+  }
+  function pop(){
+    if (!ctx || !playing) return;
+    const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(1300, t + .12);
+    g.gain.setValueAtTime(.18, t); g.gain.exponentialRampToValueAtTime(.001, t + .2);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + .25);
+  }
+  btn.addEventListener('click', () => playing ? stop() : start());
+  document.addEventListener('visibilitychange', () => { if (ctx && playing){ document.hidden ? ctx.suspend() : ctx.resume(); } });
+  function wanted(){ try { return localStorage.getItem('musica') !== 'off'; } catch(e){ return true; } }
+  return { start, stop, chime, pop, wanted };
+})();
+
 /* Abrir sobre */
 (function(){
   const env = document.getElementById('envelope'), stage = document.getElementById('stage');
   env.addEventListener('click', () => {
     if (env.classList.contains('open')) return;
+    sound.chime();
+    if (sound.wanted()) setTimeout(() => sound.start(), 900);
     env.classList.add('open'); stage.classList.add('opened');
     env.setAttribute('aria-expanded','true'); env.setAttribute('aria-label','Invitación abierta');
     const r = env.getBoundingClientRect();
@@ -573,7 +669,7 @@ const confetti = (function(){
   }
   btns.forEach(b => b.addEventListener('click', () => {
     bet = b.dataset.bet; try { localStorage.setItem('apuesta', bet); } catch(e){}
-    paintBet(); buildLink();
+    paintBet(); buildLink(); sound.pop();
     const r = b.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/2, 70);
   }));
   document.getElementById('minus').addEventListener('click', () => { guests = Math.max(1, guests - 1); out.textContent = guests; buildLink(); });
@@ -591,5 +687,6 @@ const confetti = (function(){
   paintBet(); buildLink();
 })();
 </script>
+
 </body>
 </html>
