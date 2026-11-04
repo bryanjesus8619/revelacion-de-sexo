@@ -300,10 +300,10 @@ html.intro h1 .ch{animation-delay:calc(var(--i) * 60ms + 3000ms)}
 .menu-cats button{flex:none;min-height:42px;padding:8px 15px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font:inherit;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 2px 0 var(--line);transition:background-color .2s, color .2s, border-color .2s}
 .menu-cats button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper);box-shadow:none}
 .menu-cats button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.menu-track{min-width:0;width:100%;max-width:100%;display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:12px}
+.menu-track{min-width:0;width:100%;max-width:100%;display:grid;grid-auto-flow:column;grid-auto-columns:100%;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:12px}
 .menu-track::-webkit-scrollbar{display:none}
 .menu-track:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:24px}
-.mcard{position:relative;scroll-snap-align:start;scroll-snap-stop:always;border-radius:24px;overflow:hidden;background:var(--paper);box-shadow:0 1px 0 var(--line), 0 10px 22px -16px rgba(74,52,38,.45)}
+.mcard{position:relative;scroll-snap-align:start;border-radius:24px;overflow:hidden;background:var(--paper);box-shadow:0 1px 0 var(--line), 0 10px 22px -16px rgba(74,52,38,.45)}
 .mcard .pg{position:static;top:auto;right:auto;bottom:auto;left:auto;overflow:visible;border-radius:24px}
 .menu-track{align-items:start;transition:height .35s ease}
 .menu-leather{position:relative;display:flex;flex-direction:column;gap:12px;min-width:0;padding:16px 14px 18px;border-radius:30px;
@@ -945,37 +945,51 @@ const sound = (function(){
 
 /* Menú deslizable (ligero: desplazamiento nativo con scroll-snap) */
 (function(){
-  const track = document.getElementById('menu-track'); if (!track) return;
-  const cards = [...track.querySelectorAll('.mcard')], last = cards.length - 1;
-  const chips = [...document.querySelectorAll('#menu-cats [data-go]')], cats = document.getElementById('menu-cats');
-  const prev = document.getElementById('prev'), next = document.getElementById('next'), count = document.getElementById('count');
-  let cur = 0, ticking = false;
-  const width = () => cards[0].getBoundingClientRect().width + 14;
-  function go(i){ i = Math.max(0, Math.min(last, i)); track.scrollTo({left: i * width(), behavior: reduce ? 'auto' : 'smooth'}); }
-  function fit(){ track.style.height = (cards[cur].offsetHeight + parseFloat(getComputedStyle(track).paddingBottom || 0)) + 'px'; }
-  function paint(){
-    fit();
+  var track = document.getElementById('menu-track'); if (!track) return;
+  var cards = Array.prototype.slice.call(track.querySelectorAll('.mcard')), last = cards.length - 1;
+  var chips = Array.prototype.slice.call(document.querySelectorAll('#menu-cats [data-go]')), cats = document.getElementById('menu-cats');
+  var prev = document.getElementById('prev'), next = document.getElementById('next'), count = document.getElementById('count');
+  var cur = 0, shown = -1, ticking = false, settleT = null;
+  function width(){ return cards[0].getBoundingClientRect().width + 14; }
+  function index(){ return Math.max(0, Math.min(last, Math.round(track.scrollLeft / width()))); }
+  function go(i){
+    i = Math.max(0, Math.min(last, i));
+    try { track.scrollTo({left: i * width(), behavior: reduce ? 'auto' : 'smooth'}); } catch(e){ track.scrollLeft = i * width(); }
+  }
+  function fit(){ track.style.height = (cards[cur].offsetHeight + (parseFloat(getComputedStyle(track).paddingBottom) || 0)) + 'px'; }
+  /* Durante el gesto solo se actualiza el contador (no mueve nada en pantalla) */
+  function quick(){
     count.textContent = (cur + 1) + ' / ' + cards.length;
     prev.disabled = cur === 0; next.disabled = cur === last;
-    const cat = cards[cur].dataset.cat;
-    chips.forEach(c => {
-      const on = c.dataset.go === cat;
+  }
+  /* Cuando el deslizamiento termina: ajusta el alto y marca la categoría */
+  function settle(){
+    cur = index(); quick();
+    if (shown === cur) return; shown = cur;
+    fit();
+    var cat = cards[cur].getAttribute('data-cat');
+    chips.forEach(function(c){
+      var on = c.getAttribute('data-go') === cat;
       if (on && c.getAttribute('aria-current') !== 'true'){
         c.setAttribute('aria-current', 'true');
-        cats.scrollTo({left: c.offsetLeft - (cats.clientWidth - c.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth'});
+        var left = c.offsetLeft - (cats.clientWidth - c.offsetWidth) / 2;
+        try { cats.scrollTo({left: left, behavior: 'smooth'}); } catch(e){ cats.scrollLeft = left; }
       } else if (!on) c.removeAttribute('aria-current');
     });
   }
-  track.addEventListener('scroll', () => {
+  track.addEventListener('scroll', function(){
+    clearTimeout(settleT); settleT = setTimeout(settle, 160);
     if (ticking) return; ticking = true;
-    requestAnimationFrame(() => { ticking = false; const i = Math.round(track.scrollLeft / width()); if (i !== cur){ cur = i; paint(); } });
+    requestAnimationFrame(function(){ ticking = false; var i = index(); if (i !== cur){ cur = i; quick(); } });
   }, {passive:true});
-  chips.forEach(c => c.addEventListener('click', () => go(+c.dataset.go)));
-  prev.addEventListener('click', () => go(cur - 1));
-  next.addEventListener('click', () => go(cur + 1));
-  track.addEventListener('keydown', e => { if (e.key === 'ArrowRight'){ e.preventDefault(); go(cur + 1); } if (e.key === 'ArrowLeft'){ e.preventDefault(); go(cur - 1); } });
-  paint();
-  addEventListener('resize', fit);
+  if ('onscrollend' in window) track.addEventListener('scrollend', function(){ clearTimeout(settleT); settle(); });
+  chips.forEach(function(c){ c.addEventListener('click', function(){ go(+c.getAttribute('data-go')); }); });
+  prev.addEventListener('click', function(){ go(cur - 1); });
+  next.addEventListener('click', function(){ go(cur + 1); });
+  track.addEventListener('keydown', function(e){ if (e.key === 'ArrowRight'){ e.preventDefault(); go(cur + 1); } if (e.key === 'ArrowLeft'){ e.preventDefault(); go(cur - 1); } });
+  settle();
+  var lastW = innerWidth;
+  addEventListener('resize', function(){ if (innerWidth !== lastW){ lastW = innerWidth; fit(); } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 })();
 
