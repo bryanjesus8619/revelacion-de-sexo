@@ -44,10 +44,10 @@ body{background:var(--cream);color:var(--ink);font-family:var(--font-body);font-
 }
 
 /* ---------- Globos y hojas de fondo ---------- */
-.sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.sky{position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden}
 .balloon{
-  position:absolute;bottom:-170px;width:var(--s,56px);height:calc(var(--s,56px) * 1.2);
-  border-radius:50% 50% 48% 52% / 55% 55% 45% 45%;background:var(--c);opacity:.6;
+  position:absolute;bottom:-170px;border:0;padding:0;margin:0;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:scale .4s, opacity .4s;width:var(--s,56px);height:calc(var(--s,56px) * 1.2);
+  border-radius:50% 50% 48% 52% / 55% 55% 45% 45%;background:var(--c);opacity:.72;
   animation:rise var(--d,20s) linear infinite;animation-delay:var(--delay,0s);
 }
 .balloon::before{content:"";position:absolute;left:22%;top:16%;width:22%;height:30%;border-radius:50%;background:var(--paper);opacity:.5;transform:rotate(-20deg)}
@@ -194,8 +194,9 @@ section{display:flex;flex-direction:column;gap:18px}
 
 /* Confirmación */
 .rsvp{padding:24px 20px;display:flex;flex-direction:column;gap:16px}
-.deadline{display:flex;align-items:center;gap:10px;margin:0;padding:12px 14px;border-radius:14px;background:var(--cream);font-weight:700;font-size:15px;color:var(--ink)}
-.deadline svg{flex:none;color:var(--accent)}
+.deadline{display:flex;align-items:center;gap:12px;margin:0;padding:14px 16px;border-radius:16px;background:var(--accent);font-weight:600;font-size:17px;line-height:1.35;color:var(--paper)}
+.deadline strong{font-weight:800}
+.deadline svg{flex:none;color:var(--paper)}
 .field{display:flex;flex-direction:column;gap:6px}
 .field label,.field .label{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .field input{font:inherit;font-size:18px;color:var(--ink);background:var(--cream);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;min-height:48px;width:100%}
@@ -218,6 +219,90 @@ footer .hand{font-family:var(--font-hand);font-weight:700;font-size:30px;line-he
 footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:22px;color:var(--ink-soft);display:flex;align-items:center;gap:8px}
 .beat{animation:beat 1.6s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+
+/* ---------- Señales de "esto se toca" ---------- */
+.chip,.wa,.photos-btn,.bet,.envelope,.book-btn,.sound-btn,.stepper button,.copy,.hero-balloon,.balloon,.page{-webkit-tap-highlight-color:transparent}
+.chip,.photos-btn{box-shadow:0 3px 0 var(--line)}
+.chip:active,.wa:active,.photos-btn:active,.bet:active,.book-btn:active,.stepper button:active,.sound-btn:active{transform:scale(.96)}
+.hint{display:inline-flex;align-items:center;gap:8px;margin:10px 0 0;padding:8px 14px;border-radius:999px;background:var(--paper);border:1.5px dashed var(--tan);font-size:14px;font-weight:700;color:var(--ink-soft)}
+.hint svg,.tap-hint svg,.cover-tap svg{animation:tap 1.6s ease-in-out infinite;transform-origin:50% 80%}
+@keyframes tap{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-3px) scale(1)}55%{transform:translateY(1px) scale(.9)}}
+.tap-tag{display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:5px 10px;border-radius:999px;background:var(--cream);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.bet[aria-pressed="true"] .tap-tag{visibility:hidden}
+
+/* ---------- Globos del encabezado ---------- */
+.hero{position:relative}
+.hero-balloon{position:absolute;top:6px;z-index:2;width:62px;height:100px;border:0;padding:0;background:none;cursor:pointer;transition:scale .4s, opacity .4s}
+.hb-left{left:calc(50% - 180px);animation:bobB 3.4s ease-in-out infinite}
+.hb-right{right:calc(50% - 180px);top:26px;animation:bobB 3.9s ease-in-out infinite reverse}
+@media (max-width:420px){.hb-left{left:4px}.hb-right{right:4px}}
+.hb-body{display:block;width:62px;height:74px;border-radius:50% 50% 48% 52% / 55% 55% 45% 45%;background:var(--sand-2);position:relative;box-shadow:inset -8px -10px 0 rgba(74,52,38,.07)}
+.hb-right .hb-body{background:var(--sand)}
+.hb-body::before{content:"";position:absolute;left:20%;top:14%;width:22%;height:28%;border-radius:50%;background:var(--paper);opacity:.6;transform:rotate(-20deg)}
+.hb-body::after{content:"";position:absolute;left:50%;top:100%;width:1.5px;height:26px;background:var(--tan)}
+.hero-balloon:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:12px}
+@keyframes bobB{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
+.popped{scale:1.6;opacity:0 !important;pointer-events:none !important;transition:scale .18s ease-out, opacity .18s ease-out}
+.toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top, 0px));z-index:35;transform:translate(-50%,-20px);opacity:0;padding:10px 18px;border-radius:999px;background:var(--paper);color:var(--ink);font-weight:800;font-size:16px;border:2.5px solid var(--tc, var(--tan));box-shadow:0 10px 24px -12px rgba(74,52,38,.6);transition:opacity .25s, transform .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Menú tipo libro ---------- */
+.rsvp-banner{display:flex;flex-wrap:wrap;align-items:center;gap:14px 16px;padding:20px 20px;border-radius:24px;background:var(--accent);color:var(--paper);box-shadow:0 16px 30px -18px rgba(74,52,38,.7)}
+.rb-icon{flex:none;width:54px;height:54px;border-radius:16px;background:rgba(255,251,246,.16);display:grid;place-items:center}
+.rb-text{flex:1 1 170px;min-width:0;display:flex;flex-direction:column;line-height:1.2}
+.rb-label{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.9}
+.rb-text strong{font-family:var(--font-serif);font-weight:600;font-size:27px;margin-top:3px}
+.rb-time{font-size:18px;font-weight:800}
+.rb-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;background:var(--paper);color:var(--accent);font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.rb-btn:active{transform:scale(.96)}
+.rb-btn:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
+.pay-note{display:flex;gap:14px;align-items:flex-start;padding:18px 20px}
+.pay-note svg{flex:none;color:var(--accent);margin-top:2px}
+.pay-note p{margin:0;font-size:16px;color:var(--ink-soft);min-width:0}
+.pay-note strong{color:var(--ink)}
+.book-wrap{display:flex;justify-content:center;perspective:1800px;padding-left:24px;padding-right:6px}
+.book{position:relative;width:min(100%, 440px);max-width:100%;height:600px;height:min(640px, calc(100svh - 190px));min-height:500px;transform-style:preserve-3d}
+.book::before{content:"";position:absolute;inset:6px -7px -7px 6px;border-radius:6px 16px 16px 6px;background:var(--sand-2);box-shadow:3px 3px 0 var(--sand)}
+.page{position:absolute;inset:0;margin:0;padding:0;border:0;border-radius:4px 14px 14px 4px;overflow:hidden;background:var(--paper);transform-origin:left center;transform:translateX(0px) rotateY(0deg) scaleX(1);transition:transform .9s cubic-bezier(.45,.05,.25,1), background-color .3s .3s, box-shadow .9s;box-shadow:0 14px 30px -18px rgba(74,52,38,.55);font:inherit;color:inherit;text-align:left}
+.page::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg, rgba(74,52,38,.18), rgba(74,52,38,0) 14%);pointer-events:none}
+.page.flipped{transform:translateX(var(--sx, 0px)) rotateY(-180deg) scaleX(.045);pointer-events:none;background-color:var(--sand-2);box-shadow:none}
+.page.cover.flipped{background-color:var(--accent)}
+.pg,.cover-inner{transition:opacity .2s .25s}
+.page.flipped .pg,.page.flipped .cover-inner{opacity:0}
+.pg{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:24px 22px 18px 26px;background-color:var(--paper);background-image:radial-gradient(rgba(201,170,140,.28) 1.1px, transparent 1.4px);background-size:16px 16px}
+.pg-title{margin:0;text-align:center;font-family:var(--font-hand);font-weight:700;font-size:34px;line-height:1.1;color:var(--accent)}
+.pg-sub{margin:2px 0 12px;text-align:center;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)}
+.pg h4{margin:14px 0 4px;padding-bottom:3px;border-bottom:1.5px dashed var(--line);font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:21px;color:var(--accent)}
+.it{padding:6px 0}
+.it-row{display:flex;align-items:baseline;gap:8px}
+.it-name{font-family:var(--font-serif);font-weight:600;font-size:18.5px;line-height:1.15;color:var(--ink);min-width:0}
+.it-dots{flex:1;min-width:14px;border-bottom:2px dotted var(--tan);transform:translateY(-4px)}
+.it-price{white-space:nowrap;font-weight:800;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+.it-desc{margin-top:1px;font-size:13.5px;line-height:1.35;color:var(--ink-soft)}
+.it-sizes{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:2px;font-size:14px;color:var(--ink-soft)}
+.it-sizes b{color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips span{padding:5px 11px;border-radius:999px;background:var(--cream);font-size:14px;color:var(--ink)}
+.pg-foot{margin:18px 0 0;text-align:center;font-size:11.5px;color:var(--ink-soft)}
+.toc{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.toc button{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:8px 12px 8px 14px;border:0;border-radius:12px;background:var(--cream);color:var(--ink);font-family:var(--font-serif);font-weight:600;font-size:18px;text-align:left;cursor:pointer;box-shadow:0 2px 0 var(--line);transition:transform .15s}
+.toc button:active{transform:scale(.98)}
+.toc button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.toc .n{margin-left:auto;font-family:var(--font-body);font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+.toc svg{flex:none;color:var(--accent)}
+.cover{cursor:pointer;background:var(--accent);color:var(--paper)}
+.cover-inner{position:absolute;inset:16px;border:1.5px solid rgba(255,251,246,.45);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:20px}
+.cover-small{font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:21px}
+.cover-title{font-family:var(--font-script);font-size:clamp(72px, 22vw, 100px);line-height:1}
+.cover-sub{font-size:12px;font-weight:800;letter-spacing:.24em;text-transform:uppercase;opacity:.85}
+.cover-tap{margin-top:18px;display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--paper);color:var(--accent);font-weight:800;font-size:16px;animation:ring 2s ease-in-out infinite}
+@keyframes ring{0%,100%{box-shadow:0 0 0 0 rgba(255,251,246,.55)}50%{box-shadow:0 0 0 12px rgba(255,251,246,0)}}
+.book-nav{display:flex;align-items:center;justify-content:center;gap:16px}
+.book-btn{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--tan);background:var(--paper);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 0 var(--line);transition:transform .15s, opacity .2s}
+.book-btn:disabled{opacity:.3;cursor:default;box-shadow:none}
+.book-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.book-count{min-width:8ch;text-align:center;font-family:var(--font-serif);font-weight:600;font-size:20px;font-variant-numeric:tabular-nums lining-nums}
+.book-help{margin:0;text-align:center;font-size:14px;color:var(--ink-soft)}
 
 .reveal{transition:transform .8s cubic-bezier(.2,1,.3,1)}
 .reveal.lift{transform:translateY(22px)}
@@ -248,12 +333,15 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
 </head>
 <body>
 
-<div class="sky" aria-hidden="true" id="sky"></div>
+<div class="sky" id="sky"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <button class="sound-btn" id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="sound-lbl">Activar música</span></button>
 
 <main class="wrap">
   <header class="hero">
+    <button class="hero-balloon hb-left" type="button" aria-label="Reventar globo"><span class="hb-body"></span></button>
+    <button class="hero-balloon hb-right" type="button" aria-label="Reventar globo"><span class="hb-body"></span></button>
     <svg class="bear" viewBox="0 0 200 160" role="img" aria-label="Osito sonriente">
       <g fill="#D9BFA2">
         <circle cx="52" cy="40" r="24"></circle><circle cx="148" cy="40" r="24"></circle>
@@ -277,6 +365,7 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
     <div class="heart-div" aria-hidden="true">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg>
     </div>
+    <p class="hint"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá los globos y mirá qué color sale</p>
   </header>
 
   <div class="envelope-stage" id="stage">
@@ -294,7 +383,7 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
       </span>
     </button>
     <p class="tap-hint">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>
       Tocá el sello para abrir
     </p>
     <a class="scroll-cue" href="#invitacion">
@@ -316,9 +405,9 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
       </span>
       <span class="place-name" data-cfg="lugar">La Terraza de Doña Meche</span>
       <span class="place-town" data-cfg="zona">Orosi centro, Cartago</span>
-      <a class="photos-btn" href="https://www.google.com/maps/place/La+Terraza+De+Do%C3%B1a+Meche/@9.794845,-83.8545216,1649m/data=!3m1!1e3!4m6!3m5!1s0x8fa12137e97e47a5:0x9b1012a9977935ab!8m2!3d9.794845!4d-83.8545216!16s%2Fg%2F11qqfv2y21" target="_blank" rel="noopener">
+      <a class="photos-btn" href="https://www.instagram.com/laterrazademeche/" target="_blank" rel="noopener">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"></rect><circle cx="12" cy="12.5" r="3.5"></circle><path d="M8 5l1.5-2h5L16 5"></path></svg>
-        Ver fotos del lugar
+        Ver fotos en Instagram
       </a>
       <div class="when">
         <div>
@@ -330,10 +419,6 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
           <span class="val">5:00 p.m.</span>
         </div>
       </div>
-    </div>
-    <div class="card menu">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7s1 4 3.5 4"></path></svg>
-      <p>Cada invitado podrá elegir y disfrutar lo que desee del menú. El consumo de alimentos y bebidas será cancelado individualmente por cada persona.</p>
     </div>
     <div class="actions">
       <a class="chip" id="cal" href="#" target="_blank" rel="noopener">
@@ -349,6 +434,59 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
         Waze
       </a>
     </div>
+  </section>
+
+  <section class="rsvp-banner reveal" aria-label="Fecha límite para confirmar">
+    <span class="rb-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18M8.5 15.5l2.2 2.2 4.8-4.8"></path></svg></span>
+    <span class="rb-text"><span class="rb-label">Confirmá a más tardar el</span><strong>Jueves 5 de noviembre</strong><span class="rb-time">antes de las 5:00 p.m.</span></span>
+    <a class="rb-btn" href="#t-rsvp">Confirmar</a>
+  </section>
+
+  <section class="reveal" aria-labelledby="t-menu">
+    <h2 class="section-title" id="t-menu">El menú del lugar</h2>
+    <div class="card pay-note">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7s1 4 3.5 4"></path></svg>
+      <p><strong>Cada invitado paga lo que consuma.</strong> Podés elegir lo que desees del menú. Los precios están en colones y el 10% de servicio no está incluido.</p>
+    </div>
+    <div class="book-wrap">
+      <div class="book" id="book">
+        <button class="page cover" type="button" id="cover" aria-label="Abrir el menú">
+          <span class="cover-inner">
+            <span class="cover-small">La Terraza de Doña Meche</span>
+            <span class="cover-title">Menú</span>
+            <span class="cover-sub">Precios en colones</span>
+            <span class="cover-tap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para abrir</span>
+          </span>
+        </button>
+        <div class="page" data-i="1"><div class="pg"><p class="pg-title">Índice</p><p class="pg-sub">Tocá una sección para ir directo</p><div class="toc"><button type="button" data-go="2"><span>Platos fuertes</span><span class="n">pág. 2</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="4"><span>Acompañamientos</span><span class="n">pág. 4</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="5"><span>Entradas</span><span class="n">pág. 5</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="6"><span>Arroces</span><span class="n">pág. 6</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="7"><span>Sopas y pastas</span><span class="n">pág. 7</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="8"><span>Comida rápida</span><span class="n">pág. 8</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="9"><span>Hamburguesas y más</span><span class="n">pág. 9</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="10"><span>Desayunos</span><span class="n">pág. 10</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="12"><span>Empanadas y sándwiches</span><span class="n">pág. 12</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="13"><span>Postres</span><span class="n">pág. 13</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="14"><span>Refrescos</span><span class="n">pág. 14</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="15"><span>Batidos</span><span class="n">pág. 15</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="16"><span>Bebidas calientes</span><span class="n">pág. 16</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="17"><span>Cócteles</span><span class="n">pág. 17</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="18"><span>Mocktails</span><span class="n">pág. 18</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="19"><span>Cervezas y licores</span><span class="n">pág. 19</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="20"><span>Tequila y whisky</span><span class="n">pág. 20</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button><button type="button" data-go="21"><span>Shots</span><span class="n">pág. 21</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 1 / 21</p></div></div>
+        <div class="page" data-i="2"><div class="pg"><p class="pg-title">Platos fuertes</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Plato del día</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div><div class="it-desc">Incluye refresco</div></div><div class="it"><div class="it-row"><span class="it-name">Casado Doña Meche</span><span class="it-dots"></span><span class="it-price">₡4.800</span></div><div class="it-desc">Incluye refresco</div></div><div class="it"><div class="it-row"><span class="it-name">Pechuga a la reina</span><span class="it-dots"></span><span class="it-price">₡6.500</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Filet de pollo a la plancha</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Filet de tilapia con salsa tártara</span><span class="it-dots"></span><span class="it-price">₡5.500</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Filet de curvina</span><span class="it-dots"></span><span class="it-price">₡8.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Filet de curvina en salsa de camarones</span><span class="it-dots"></span><span class="it-price">₡12.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Churrasco</span><span class="it-dots"></span><span class="it-price">₡10.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Entraña</span><span class="it-dots"></span><span class="it-price">₡8.500</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Filete miñón</span><span class="it-dots"></span><span class="it-price">₡11.500</span></div><div class="it-desc">1 salsa a escoger y 2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Fajitas de lomito</span><span class="it-dots"></span><span class="it-price">₡8.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Fajitas de pollo</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div><div class="it-desc">Con papas fritas y ensalada</div></div><div class="it"><div class="it-row"><span class="it-name">Ensalada de pollo</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div><div class="it-desc">Con crotones y aderezo</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 2 / 21</p></div></div>
+        <div class="page" data-i="3"><div class="pg"><p class="pg-title">Platos fuertes</p><p class="pg-sub">Continuación</p><div class="it"><div class="it-row"><span class="it-name">Costilla de cerdo en salsa BBQ</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div><div class="it-desc">Entera o en trocitos · 2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Costilla de cerdo doble en salsa BBQ</span><span class="it-dots"></span><span class="it-price">₡10.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Plato de chicharrón</span><span class="it-dots"></span><span class="it-price">₡6.500</span></div><div class="it-desc">Pico de gallo, frijoles molidos y 1 acompañamiento</div></div><div class="it"><div class="it-row"><span class="it-name">Plato surtido para 2 personas</span><span class="it-dots"></span><span class="it-price">₡10.000</span></div><div class="it-desc">Pico de gallo, frijoles molidos y 1 acompañamiento</div></div><div class="it"><div class="it-row"><span class="it-name">Plato surtido mar y tierra para 2 personas</span><span class="it-dots"></span><span class="it-price">₡12.500</span></div><div class="it-desc">Pico de gallo, frijoles molidos y 1 acompañamiento</div></div><div class="it"><div class="it-row"><span class="it-name">Lonjas de cerdo</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div><div class="it-desc">1 salsa a escoger y 2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Camarones</span><span class="it-dots"></span><span class="it-price">₡6.500</span></div><div class="it-desc">Empanizados o al ajillo · 2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Camarones a la diabla</span><span class="it-dots"></span><span class="it-price">₡7.000</span></div><div class="it-desc">2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Pescado entero</span><span class="it-dots"></span><span class="it-price">Por peso</span></div><div class="it-desc">Pargo o curvina · 2 acompañamientos</div></div><div class="it"><div class="it-row"><span class="it-name">Trucha</span><span class="it-dots"></span><span class="it-price">Por peso</span></div><div class="it-desc">Entera o en trocitos</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 3 / 21</p></div></div>
+        <div class="page" data-i="4"><div class="pg"><p class="pg-title">Acompañamientos</p><p class="pg-sub">Para los platos fuertes</p><h4>A escoger</h4><div class="chips"><span>Patacones</span><span>Yuca frita</span><span>Papas fritas</span><span>Papa en gajo</span><span>Puré</span><span>Arroz</span><span>Frijoles</span><span>Pico de gallo</span><span>Ensalada</span><span>Vegetales</span></div><h4>Porciones adicionales</h4><div class="it"><div class="it-row"><span class="it-name">Puré</span><span class="it-dots"></span><span class="it-price">₡1.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Picadillo</span><span class="it-dots"></span><span class="it-price">₡600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz blanco</span><span class="it-dots"></span><span class="it-price">₡600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Plátano maduro</span><span class="it-dots"></span><span class="it-price">₡600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Queso frito o natural</span><span class="it-dots"></span><span class="it-price">₡600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Frijoles enteros o molidos</span><span class="it-dots"></span><span class="it-price">₡600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Ensalada</span><span class="it-dots"></span><span class="it-price">₡700</span></div></div><div class="it"><div class="it-row"><span class="it-name">Salchichón</span><span class="it-dots"></span><span class="it-price">₡600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Aguacate</span><span class="it-dots"></span><span class="it-price">₡800</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 4 / 21</p></div></div>
+        <div class="page" data-i="5"><div class="pg"><p class="pg-title">Entradas</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Papas fritas</span></div><div class="it-sizes"><span>Grandes <b>₡2.600</b></span><span>Pequeñas <b>₡1.500</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Salchipapas</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Salchicha con papas fritas</div></div><div class="it"><div class="it-row"><span class="it-name">Queso en cubitos</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Con papas fritas</div></div><div class="it"><div class="it-row"><span class="it-name">Patacones clásicos</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Con frijoles molidos y pico de gallo</div></div><div class="it"><div class="it-row"><span class="it-name">Patacones especiales</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div><div class="it-desc">Con carne o pollo, frijoles molidos y pico de gallo</div></div><div class="it"><div class="it-row"><span class="it-name">Yuca frita</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Ceviche de pescado</span></div><div class="it-sizes"><span>Grande <b>₡4.500</b></span><span>Pequeño <b>₡3.250</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Ceviche de camarón</span></div><div class="it-sizes"><span>Grande <b>₡5.800</b></span><span>Pequeño <b>₡4.300</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Ceviche mixto</span></div><div class="it-sizes"><span>Grande <b>₡5.500</b></span><span>Pequeño <b>₡4.000</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Aros de cebolla</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Frijoles charros</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 5 / 21</p></div></div>
+        <div class="page" data-i="6"><div class="pg"><p class="pg-title">Arroces</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Arroz con pollo</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz con camarones</span><span class="it-dots"></span><span class="it-price">₡6.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Camarones con arroz</span><span class="it-dots"></span><span class="it-price">₡9.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz con carne</span><span class="it-dots"></span><span class="it-price">₡4.800</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz con mariscos</span><span class="it-dots"></span><span class="it-price">₡5.750</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz con calamares</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz mar y tierra</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz del chef</span><span class="it-dots"></span><span class="it-price">₡4.800</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz cantonés</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz vegetariano</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arroz caribeño con cerdo</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 6 / 21</p></div></div>
+        <div class="page" data-i="7"><div class="pg"><p class="pg-title">Sopas y pastas</p><p class="pg-sub">La Terraza de Doña Meche</p><h4>Sopas</h4><div class="it"><div class="it-row"><span class="it-name">Olla de carne</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div><div class="it-desc">Solo sábados y domingos</div></div><div class="it"><div class="it-row"><span class="it-name">Sopa de pollo</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Sopa azteca</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div><div class="it-desc">Sopa de tortilla mexicana</div></div><div class="it"><div class="it-row"><span class="it-name">Sopa de mariscos</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Sopa caribeña</span><span class="it-dots"></span><span class="it-price">₡5.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Sopa negra</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><h4>Pastas</h4><div class="it"><div class="it-row"><span class="it-name">Espagueti con pollo</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div><div class="it-desc">Salsa roja o blanca</div></div><div class="it"><div class="it-row"><span class="it-name">Espagueti con camarones</span><span class="it-dots"></span><span class="it-price">₡6.500</span></div><div class="it-desc">Salsa roja o blanca</div></div><div class="it"><div class="it-row"><span class="it-name">Espagueti con mariscos</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div><div class="it-desc">Salsa roja o blanca</div></div><div class="it"><div class="it-row"><span class="it-name">Espagueti del chef</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div><div class="it-desc">Salsa roja o blanca</div></div><div class="it"><div class="it-row"><span class="it-name">Espagueti con mantequilla y queso</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Espagueti a la boloñesa</span><span class="it-dots"></span><span class="it-price">₡5.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Espagueti a la carbonara</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 7 / 21</p></div></div>
+        <div class="page" data-i="8"><div class="pg"><p class="pg-title">Comida rápida</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Chifrijo</span></div><div class="it-sizes"><span>Grande <b>₡4.800</b></span><span>Pequeño <b>₡3.600</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Chifrijo caribeño</span></div><div class="it-sizes"><span>Grande <b>₡5.300</b></span><span>Pequeño <b>₡4.200</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Nachos</span></div><div class="it-sizes"><span>Regulares <b>₡4.800</b></span><span>Mar y tierra <b>₡6.500</b></span><span>Al pastor <b>₡5.000</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Tacos texanos</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Burrito</span></div><div class="it-sizes"><span>Regular <b>₡4.000</b></span><span>Mexicano <b>₡4.500</b></span><span>Caribeño <b>₡4.500</b></span></div><div class="it-desc">Con papas fritas y ensalada</div></div><div class="it"><div class="it-row"><span class="it-name">Chilasquilas</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div><div class="it-desc">Con papas fritas</div></div><div class="it"><div class="it-row"><span class="it-name">Quesadillas</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div><div class="it-desc">Con papas fritas y ensalada</div></div><div class="it"><div class="it-row"><span class="it-name">Papas «Fiesta»</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 8 / 21</p></div></div>
+        <div class="page" data-i="9"><div class="pg"><p class="pg-title">Hamburguesas y más</p><p class="pg-sub">La Terraza de Doña Meche</p><h4>Hamburguesas</h4><div class="it"><div class="it-row"><span class="it-name">Clásica</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">De pollo</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Mar y tierra</span><span class="it-dots"></span><span class="it-price">₡6.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Especial de la casa</span><span class="it-dots"></span><span class="it-price">₡5.500</span></div><div class="it-desc">Torta de carne casera y de pollo</div></div><div class="it"><div class="it-row"><span class="it-name">Doña Meche</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Valley</span><span class="it-dots"></span><span class="it-price">₡5.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Vegetariana</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><h4>Para compartir</h4><div class="it"><div class="it-row"><span class="it-name">Alitas</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div><div class="it-desc">6 unidades, con papas fritas y salsa BBQ, búfalo o caribeña</div></div><div class="it"><div class="it-row"><span class="it-name">Dedos de pollo</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Con papas fritas</div></div><div class="it"><div class="it-row"><span class="it-name">Dedos de pescado</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Con papas fritas</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 9 / 21</p></div></div>
+        <div class="page" data-i="10"><div class="pg"><p class="pg-title">Desayunos</p><p class="pg-sub">y café de la tarde</p><div class="it"><div class="it-row"><span class="it-name">Gallo pinto tradicional</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div><div class="it-desc">Incluye huevo, plátano maduro, tostadas y natilla</div></div><div class="it"><div class="it-row"><span class="it-name">Gallo pinto con carne</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div><div class="it-desc">Carne en salsa, pollo en salsa o chuleta de cerdo. Incluye huevo, plátano maduro, tostadas y natilla</div></div><div class="it"><div class="it-row"><span class="it-name">Gallo pinto Doña Meche</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div><div class="it-desc">Incluye tortilla palmeada, torta de huevo, salchichón, natilla y plátano maduro</div></div><div class="it"><div class="it-row"><span class="it-name">Gallo pinto especial</span><span class="it-dots"></span><span class="it-price">₡5.500</span></div><div class="it-desc">Incluye tortilla palmeada, chuleta de cerdo, torta de huevo, salchichón, natilla y plátano maduro</div></div><div class="it"><div class="it-row"><span class="it-name">Huevos con jamón</span><span class="it-dots"></span><span class="it-price">₡2.800</span></div><div class="it-desc">Incluye tostadas y mermeladas</div></div><div class="it"><div class="it-row"><span class="it-name">Omelette</span><span class="it-dots"></span><span class="it-price">₡2.800</span></div><div class="it-desc">Jamón y queso, vegetariano o típico</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 10 / 21</p></div></div>
+        <div class="page" data-i="11"><div class="pg"><p class="pg-title">Desayunos</p><p class="pg-sub">Continuación</p><div class="it"><div class="it-row"><span class="it-name">Tortilla Doña Meche</span><span class="it-dots"></span><span class="it-price">₡4.800</span></div><div class="it-desc">Queso y carne mechada, incluye natilla</div></div><div class="it"><div class="it-row"><span class="it-name">Desayuno caprese</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Incluye tostadas, queso natural, tomate, 2 huevos y albahaca</div></div><div class="it"><div class="it-row"><span class="it-name">Tortilla con queso</span><span class="it-dots"></span><span class="it-price">₡3.200</span></div></div><div class="it"><div class="it-row"><span class="it-name">Panqueques</span><span class="it-dots"></span><span class="it-price">₡2.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Chorreada</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div><div class="it-desc">Incluye natilla</div></div><div class="it"><div class="it-row"><span class="it-name">Queque de zanahoria</span><span class="it-dots"></span><span class="it-price">₡2.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Torta chilena</span><span class="it-dots"></span><span class="it-price">₡3.250</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 11 / 21</p></div></div>
+        <div class="page" data-i="12"><div class="pg"><p class="pg-title">Empanadas y sándwiches</p><p class="pg-sub">La Terraza de Doña Meche</p><h4>Empanadas</h4><div class="it"><div class="it-row"><span class="it-name">Queso</span><span class="it-dots"></span><span class="it-price">₡2.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Frijol</span><span class="it-dots"></span><span class="it-price">₡2.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Carne</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Pollo</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Chicharrón</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Arreglada</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Doña Meche</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><h4>Sándwiches</h4><div class="it"><div class="it-row"><span class="it-name">Jamón y queso</span></div><div class="it-sizes"><span>Solo <b>₡3.300</b></span><span>Con papas <b>₡3.800</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Carne o pollo</span></div><div class="it-sizes"><span>Solo <b>₡3.700</b></span><span>Con papas <b>₡4.200</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Doña Meche</span></div><div class="it-sizes"><span>Solo <b>₡3.500</b></span><span>Con papas <b>₡4.000</b></span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 12 / 21</p></div></div>
+        <div class="page" data-i="13"><div class="pg"><p class="pg-title">Postres</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Piña salteada</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Tres leches</span><span class="it-dots"></span><span class="it-price">₡3.250</span></div></div><div class="it"><div class="it-row"><span class="it-name">Cheesecake</span><span class="it-dots"></span><span class="it-price">₡3.250</span></div></div><div class="it"><div class="it-row"><span class="it-name">Copa de helado</span><span class="it-dots"></span><span class="it-price">₡2.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Queque seco con helado</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Ensalada de frutas</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 13 / 21</p></div></div>
+        <div class="page" data-i="14"><div class="pg"><p class="pg-title">Refrescos</p><p class="pg-sub">La Terraza de Doña Meche</p><h4>Naturales</h4><div class="it"><div class="it-row"><span class="it-name">Refresco natural</span></div><div class="it-sizes"><span>En agua <b>₡1.200</b></span><span>En leche <b>₡1.600</b></span></div></div><h4>Sabores</h4><div class="chips"><span>Frutas</span><span>Piña</span><span>Papaya</span><span>Cas</span><span>Carambola</span><span>Mora</span><span>Fresa</span><span>Maracuyá</span><span>Sandía</span><span>Mango</span><span>Guanábana</span></div><h4>Gaseosas</h4><div class="it"><div class="it-row"><span class="it-name">Pequeña · 350 ml</span><span class="it-dots"></span><span class="it-price">₡1.300</span></div></div><div class="it"><div class="it-row"><span class="it-name">Grande · 600 ml</span><span class="it-dots"></span><span class="it-price">₡1.800</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 14 / 21</p></div></div>
+        <div class="page" data-i="15"><div class="pg"><p class="pg-title">Batidos</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Crema con helado</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Café frío con helado</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Chocolate frío</span><span class="it-dots"></span><span class="it-price">₡2.200</span></div></div><div class="it"><div class="it-row"><span class="it-name">Piña con avena</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Banano, avena y miel</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Piña con apio y limón</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Piña con hierbabuena</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Fresa con hierbabuena</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Limonada con hierbabuena</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Milk shake</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Fresa, mora, churchill o chicle</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 15 / 21</p></div></div>
+        <div class="page" data-i="16"><div class="pg"><p class="pg-title">Bebidas calientes</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Café negro</span></div><div class="it-sizes"><span>Grande <b>₡1.300</b></span><span>Pequeño <b>₡1.000</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Café con leche</span></div><div class="it-sizes"><span>Grande <b>₡1.500</b></span><span>Pequeño <b>₡1.300</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Agua dulce</span></div><div class="it-sizes"><span>Normal <b>₡1.200</b></span><span>En leche <b>₡1.500</b></span></div></div><div class="it"><div class="it-row"><span class="it-name">Capuchino</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Mocacino</span><span class="it-dots"></span><span class="it-price">₡1.700</span></div></div><div class="it"><div class="it-row"><span class="it-name">Chocolate caliente</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Té</span></div><div class="it-sizes"><span>En agua <b>₡1.000</b></span><span>En leche <b>₡1.400</b></span></div><div class="it-desc">Manzanilla, verde o negro</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 16 / 21</p></div></div>
+        <div class="page" data-i="17"><div class="pg"><p class="pg-title">Cócteles</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Coladas</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Piña, fresa o mora</div></div><div class="it"><div class="it-row"><span class="it-name">Gin &amp; tonic</span><span class="it-dots"></span><span class="it-price">₡3.250</span></div><div class="it-desc">Piña con hierbabuena, maracuyá o frutos rojos</div></div><div class="it"><div class="it-row"><span class="it-name">Margarita</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Clásica, maracuyá o fresa con hierbabuena</div></div><div class="it"><div class="it-row"><span class="it-name">Daikiri</span><span class="it-dots"></span><span class="it-price">₡3.250</span></div><div class="it-desc">Clásico, mango y fresa o frutos rojos</div></div><div class="it"><div class="it-row"><span class="it-name">Mojito</span><span class="it-dots"></span><span class="it-price">₡3.250</span></div><div class="it-desc">Clásico, maracuyá o coco</div></div><div class="it"><div class="it-row"><span class="it-name">Coctel del Valle</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">A base de café y ron</div></div><div class="it"><div class="it-row"><span class="it-name">Michelada suprema</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div><div class="it-desc">Clásica, tomate picante o mango</div></div><div class="it"><div class="it-row"><span class="it-name">Smirnoff High Balls</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div><div class="it-desc">Sunrise, frutos rojos o Collins</div></div><div class="it"><div class="it-row"><span class="it-name">Negroni</span><span class="it-dots"></span><span class="it-price">₡4.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Nieblas del Caribe</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Pantera Rosa</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Sangría</span><span class="it-dots"></span><span class="it-price">₡3.500</span></div><div class="it-desc">Tinta de manzana, blanca de frutos rojos o blanca de maracuyá</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 17 / 21</p></div></div>
+        <div class="page" data-i="18"><div class="pg"><p class="pg-title">Mocktails</p><p class="pg-sub">Cócteles sin alcohol</p><div class="it"><div class="it-row"><span class="it-name">Mojito virgen</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Limón y hierbabuena</div></div><div class="it"><div class="it-row"><span class="it-name">Costa Rica Sunrise</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Sandía, naranja y granadina</div></div><div class="it"><div class="it-row"><span class="it-name">Berry Cooler</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Frutos rojos y limón</div></div><div class="it"><div class="it-row"><span class="it-name">Pura Vida Tropical</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Maracuyá, piña y hierbabuena</div></div><div class="it"><div class="it-row"><span class="it-name">Tropical Refresher</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Maracuyá y coco</div></div><div class="it"><div class="it-row"><span class="it-name">Verde Selva Detox</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div><div class="it-desc">Cas, pepino y limón</div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 18 / 21</p></div></div>
+        <div class="page" data-i="19"><div class="pg"><p class="pg-title">Cervezas y licores</p><p class="pg-sub">La Terraza de Doña Meche</p><h4>Cervezas</h4><div class="it"><div class="it-row"><span class="it-name">Nacional</span><span class="it-dots"></span><span class="it-price">₡1.600</span></div></div><div class="it"><div class="it-row"><span class="it-name">Bavaria</span><span class="it-dots"></span><span class="it-price">₡2.300</span></div></div><div class="it"><div class="it-row"><span class="it-name">Heineken</span><span class="it-dots"></span><span class="it-price">₡2.300</span></div></div><div class="it"><div class="it-row"><span class="it-name">Sol</span><span class="it-dots"></span><span class="it-price">₡2.300</span></div></div><div class="it"><div class="it-row"><span class="it-name">Corona</span><span class="it-dots"></span><span class="it-price">₡2.300</span></div></div><div class="it"><div class="it-row"><span class="it-name">Smirnoff Ice</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><h4>Ron</h4><div class="it"><div class="it-row"><span class="it-name">Bacardi</span><span class="it-dots"></span><span class="it-price">₡1.300</span></div></div><div class="it"><div class="it-row"><span class="it-name">Flor de Caña 7 años</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Flor de Caña 12 años</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Centenario 7 años</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Capitán Morgan</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><h4>Vodka</h4><div class="it"><div class="it-row"><span class="it-name">Smirnoff</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Hipnotic</span><span class="it-dots"></span><span class="it-price">₡2.200</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 19 / 21</p></div></div>
+        <div class="page" data-i="20"><div class="pg"><p class="pg-title">Tequila y whisky</p><p class="pg-sub">La Terraza de Doña Meche</p><h4>Tequila</h4><div class="it"><div class="it-row"><span class="it-name">José Cuervo</span><span class="it-dots"></span><span class="it-price">₡1.700</span></div></div><div class="it"><div class="it-row"><span class="it-name">Jarana</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">1800</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Herradura</span><span class="it-dots"></span><span class="it-price">₡4.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Tequila Rose</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><h4>Whisky</h4><div class="it"><div class="it-row"><span class="it-name">Red Label</span><span class="it-dots"></span><span class="it-price">₡1.700</span></div></div><div class="it"><div class="it-row"><span class="it-name">Black Label</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Chivas Regal 12</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Old Parr 12</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Buchanan&#x27;s</span><span class="it-dots"></span><span class="it-price">₡3.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Black &amp; White</span><span class="it-dots"></span><span class="it-price">₡1.700</span></div></div><div class="it"><div class="it-row"><span class="it-name">J&amp;B</span><span class="it-dots"></span><span class="it-price">₡1.700</span></div></div><div class="it"><div class="it-row"><span class="it-name">Jack Daniel&#x27;s N.º 7</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 20 / 21</p></div></div>
+        <div class="page" data-i="21"><div class="pg"><p class="pg-title">Shots</p><p class="pg-sub">La Terraza de Doña Meche</p><div class="it"><div class="it-row"><span class="it-name">Cacique</span><span class="it-dots"></span><span class="it-price">₡1.350</span></div></div><div class="it"><div class="it-row"><span class="it-name">Antioqueño</span><span class="it-dots"></span><span class="it-price">₡1.350</span></div></div><div class="it"><div class="it-row"><span class="it-name">Guayabeado</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Anís</span><span class="it-dots"></span><span class="it-price">₡1.350</span></div></div><div class="it"><div class="it-row"><span class="it-name">Malibú</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Chiliguaro 2x1</span><span class="it-dots"></span><span class="it-price">₡1.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Pitufo</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">La Bella y la Bestia</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Derrame cerebral</span><span class="it-dots"></span><span class="it-price">₡2.500</span></div></div><div class="it"><div class="it-row"><span class="it-name">Medusa</span><span class="it-dots"></span><span class="it-price">₡2.000</span></div></div><div class="it"><div class="it-row"><span class="it-name">Jagger</span><span class="it-dots"></span><span class="it-price">₡1.800</span></div></div><p class="pg-foot">Precios en colones · 10% de servicio no incluido · 21 / 21</p></div></div>
+      </div>
+    </div>
+    <div class="book-nav">
+      <button class="book-btn" id="prev" type="button" aria-label="Página anterior" disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+      <span class="book-count" id="count" aria-live="polite">Portada</span>
+      <button class="book-btn" id="next" type="button" aria-label="Página siguiente"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+    </div>
+    <p class="book-help">Deslizá o usá las flechas para pasar las páginas. En el índice podés tocar una sección para ir directo.</p>
   </section>
 
   <section class="reveal" aria-labelledby="t-cuenta">
@@ -375,6 +513,7 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
           <path d="M32 26c-2-3-6-1-4 2l4 4 4-4c2-3-2-5-4-2z" fill="currentColor"></path>
         </svg>
         <span class="bring">Traé un paquetito de <strong>pañales</strong></span>
+        <span class="tap-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para elegir</span>
       </button>
       <button class="bet" type="button" data-bet="niña" aria-pressed="false">
         <span class="mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
@@ -386,6 +525,7 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
           <path d="M32 33c-2-3-6-1-4 2l4 4 4-4c2-3-2-5-4-2z" fill="currentColor"></path>
         </svg>
         <span class="bring">Traé un paquetito de <strong>toallitas húmedas</strong></span>
+        <span class="tap-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para elegir</span>
       </button>
     </div>
     <p class="bet-msg" id="bet-msg" aria-live="polite">¡Será una linda forma de empezar a llenar de amor y cositas la llegada de nuestro bebé!</p>
@@ -409,8 +549,8 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
     <h2 class="section-title" id="t-rsvp">Confirmá tu asistencia</h2>
     <form class="card rsvp" id="rsvp" novalidate>
       <p class="deadline">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"></rect><path d="M8 12l3 3 5-6"></path></svg>
-        Por favor confirmar antes del viernes 6 de noviembre
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18M8.5 15.5l2.2 2.2 4.8-4.8"></path></svg>
+        <span>Confirmá a más tardar el <strong>jueves 5 de noviembre</strong>, <strong>antes de las 5:00 p.m.</strong></span>
       </p>
       <div class="field">
         <label for="guest-name">Tu nombre</label>
@@ -454,6 +594,7 @@ const CONFIG = {
 /* ================================== */
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const PINK = ['#F2A7BE','#E8869F','#F7C6D4','#D9637F'], BLUE = ['#9CC7EA','#6FA6DB','#C4DFF5','#4F86C2'];
 document.querySelectorAll('[data-cfg]').forEach(el => { el.textContent = CONFIG[el.dataset.cfg]; });
 
 /* Título letra por letra */
@@ -469,13 +610,15 @@ document.querySelectorAll('[data-cfg]').forEach(el => { el.textContent = CONFIG[
 (function(){
   if (reduce) return;
   const sky = document.getElementById('sky');
-  for (let i = 0; i < 9; i++){
-    const b = document.createElement('span'); b.className = 'balloon';
-    b.style.left = (i * 11 + Math.random() * 6) + '%';
+  for (let i = 0; i < 7; i++){
+    const b = document.createElement('button'); b.className = 'balloon'; b.type = 'button';
+    b.setAttribute('aria-label', 'Reventar globo');
+    b.style.left = (4 + i * 13 + Math.random() * 6) + '%';
     b.style.setProperty('--c', i % 2 ? 'var(--sand)' : 'var(--sand-2)');
-    b.style.setProperty('--s', (40 + Math.random() * 34) + 'px');
+    b.style.setProperty('--s', (46 + Math.random() * 30) + 'px');
     b.style.setProperty('--d', (18 + Math.random() * 12) + 's');
     b.style.setProperty('--delay', (-Math.random() * 26) + 's');
+    b.addEventListener('click', () => popBalloon(b));
     sky.appendChild(b);
   }
   for (let i = 0; i < 6; i++){
@@ -487,6 +630,23 @@ document.querySelectorAll('[data-cfg]').forEach(el => { el.textContent = CONFIG[
     sky.appendChild(h);
   }
 })();
+
+/* Globos: al tocarlos revientan con confeti rosa o celeste */
+let toastT = null;
+function toast(msg, color){
+  const t = document.getElementById('toast'); t.textContent = msg; t.style.setProperty('--tc', color);
+  t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800);
+}
+function popBalloon(b){
+  if (b.classList.contains('popped')) return;
+  const r = b.getBoundingClientRect(), pink = Math.random() < .5;
+  b.classList.add('popped');
+  confetti(r.left + r.width / 2, r.top + r.height / 3, 90, pink ? PINK : BLUE, true);
+  sound.pop();
+  toast(pink ? '¡Salió rosa!' : '¡Salió celeste!', pink ? '#E8869F' : '#6FA6DB');
+  setTimeout(() => b.classList.remove('popped'), 1800);
+}
+document.querySelectorAll('.hero-balloon').forEach(b => b.addEventListener('click', () => popBalloon(b)));
 
 const fecha = new Date(CONFIG.fechaISO);
 
@@ -526,11 +686,13 @@ const confetti = (function(){
   function size(){ cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
   size(); addEventListener('resize', size);
   const palette = ['#C9AA8C','#8A5A3C','#E8D7C3','#D9BFA2','#E3BFA8','#B98F6E'];
-  function burst(x, y, n){
-    if (reduce) return;
+  function burst(x, y, n, cols, force){
+    if (reduce && !force) return;
+    if (reduce) n = Math.min(n, 30);
+    const pal = cols || palette;
     for (let i = 0; i < n; i++){
       const a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * 9;
-      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 6, r: 5 + Math.random() * 6, c: palette[i % palette.length],
+      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 6, r: 5 + Math.random() * 6, c: pal[i % pal.length],
         rot: Math.random() * 6, vr: (Math.random() - .5) * .3, shape: Math.random() < .35 ? 'h' : (Math.random() < .5 ? 'c' : 'r'), life: 0});
     }
     if (!running){ running = true; requestAnimationFrame(loop); }
@@ -617,16 +779,24 @@ const sound = (function(){
     [84,88,91,96,100].forEach((n, i) => bell(n, t + i * .07, .12, 1.4));
   }
   function pop(){
-    if (!ctx || !playing) return;
+    if (!init()) return; if (ctx.state === 'suspended') ctx.resume();
     const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(1300, t + .12);
-    g.gain.setValueAtTime(.18, t); g.gain.exponentialRampToValueAtTime(.001, t + .2);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t + .25);
+    g.gain.setValueAtTime(.2, t); g.gain.exponentialRampToValueAtTime(.001, t + .2);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + .25);
+  }
+  function flip(){
+    if (!init()) return; if (ctx.state === 'suspended') ctx.resume();
+    const len = .4, buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * len), ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++){ const k = i / d.length; d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * k) * (1 - k); }
+    const src = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+    src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = .6; g.gain.value = .35;
+    src.connect(bp); bp.connect(g); g.connect(ctx.destination); src.start();
   }
   btn.addEventListener('click', () => playing ? stop() : start());
   document.addEventListener('visibilitychange', () => { if (ctx && playing){ document.hidden ? ctx.suspend() : ctx.resume(); } });
   function wanted(){ try { return localStorage.getItem('musica') !== 'off'; } catch(e){ return true; } }
-  return { start, stop, chime, pop, wanted };
+  return { start, stop, chime, pop, flip, wanted };
 })();
 
 /* Abrir sobre */
@@ -645,6 +815,46 @@ const sound = (function(){
       setTimeout(() => confetti(r.right - 20, r.top, 60), 380);
     }, 650);
   });
+})();
+
+
+/* Menú tipo libro */
+(function(){
+  const book = document.getElementById('book'); if (!book) return;
+  const pages = [...book.querySelectorAll('.page')], last = pages.length - 1;
+  const prev = document.getElementById('prev'), next = document.getElementById('next'), count = document.getElementById('count');
+  let cur = 0, swiped = false, lt = null;
+  function layout(){ pages.forEach((p, i) => { p.style.zIndex = p.classList.contains('flipped') ? i + 1 : pages.length - i + 10; }); }
+  function paint(){
+    prev.disabled = cur === 0; next.disabled = cur === last;
+    count.textContent = cur === 0 ? 'Portada' : cur + ' / ' + last;
+  }
+  function step(d){
+    if (d > 0 && cur < last){ const p = pages[cur]; p.style.zIndex = 200 + cur; p.style.setProperty('--sx', (-cur * 1.1) + 'px'); p.classList.add('flipped'); cur++; }
+    else if (d < 0 && cur > 0){ cur--; const p = pages[cur]; p.style.zIndex = 300 - cur; p.classList.remove('flipped'); }
+    else return false;
+    return true;
+  }
+  function settle(){ clearTimeout(lt); lt = setTimeout(layout, 950); paint(); const pg = pages[cur].querySelector('.pg'); if (pg) pg.scrollTop = 0; }
+  function go(d){ if (step(d)){ sound.flip(); settle(); } }
+  function goTo(n){
+    n = Math.max(0, Math.min(last, n)); if (n === cur) return;
+    const d = n > cur ? 1 : -1, steps = Math.abs(n - cur);
+    sound.flip();
+    for (let k = 0; k < steps; k++) setTimeout(() => { step(d); settle(); }, k * (reduce ? 0 : 90));
+  }
+  pages[0].addEventListener('click', () => { if (swiped){ swiped = false; return; } go(1); });
+  book.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => goTo(+b.dataset.go)));
+  prev.addEventListener('click', () => go(-1));
+  next.addEventListener('click', () => go(1));
+  let x0 = null, y0 = null;
+  book.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, {passive:true});
+  book.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3){ swiped = true; setTimeout(() => swiped = false, 400); go(dx < 0 ? 1 : -1); }
+  }, {passive:true});
+  layout(); paint();
 })();
 
 /* Elevación suave al entrar en pantalla (todo visible en reposo) */
@@ -678,7 +888,7 @@ const sound = (function(){
   btns.forEach(b => b.addEventListener('click', () => {
     bet = b.dataset.bet; try { localStorage.setItem('apuesta', bet); } catch(e){}
     paintBet(); buildLink(); sound.pop();
-    const r = b.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/2, 70);
+    const r = b.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/2, 70, bet === 'niño' ? BLUE : PINK);
   }));
   document.getElementById('minus').addEventListener('click', () => { guests = Math.max(1, guests - 1); out.textContent = guests; buildLink(); });
   document.getElementById('plus').addEventListener('click', () => { guests = Math.min(12, guests + 1); out.textContent = guests; buildLink(); });
