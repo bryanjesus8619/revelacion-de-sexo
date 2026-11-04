@@ -182,7 +182,10 @@ section{display:flex;flex-direction:column;gap:18px}
 .bet .bring strong{color:var(--ink)}
 .bet .mark{position:absolute;top:10px;right:12px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--paper);display:grid;place-items:center;transform:scale(0);transition:transform .3s cubic-bezier(.2,1.6,.4,1)}
 .bet[aria-pressed="true"] .mark{transform:scale(1)}
-.bet-msg{margin:0 auto;max-width:36ch;text-align:center;font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:20px;color:var(--ink-soft)}
+fieldset.bet-field{border:0;margin:0;padding:0;min-width:0}
+fieldset.bet-field legend{padding:0;margin-bottom:6px}
+.bet-intro{margin:0 0 10px;font-size:15px;line-height:1.4;color:var(--ink-soft)}
+.bet-msg{margin:10px auto 0;max-width:36ch;text-align:center;font-family:var(--font-serif);font-style:italic;font-weight:600;font-size:19px;color:var(--ink-soft)}
 
 /* Vestimenta */
 .dress{padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
@@ -243,17 +246,24 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
 .hero-balloon:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:12px}
 @keyframes bobB{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}
 .popped{scale:1.6;opacity:0 !important;pointer-events:none !important;transition:scale .18s ease-out, opacity .18s ease-out}
+.party{position:fixed;inset:0;z-index:25;pointer-events:none;overflow:hidden}
+.rise-b{position:absolute;bottom:-150px;width:var(--s);height:calc(var(--s) * 1.2);border-radius:50% 50% 48% 52% / 55% 55% 45% 45%;background:var(--c);box-shadow:inset -8px -10px 0 rgba(0,0,0,.06);animation:riseUp var(--d) cubic-bezier(.35,.55,.4,1) var(--dl) both}
+.rise-b::before{content:"";position:absolute;left:20%;top:14%;width:22%;height:28%;border-radius:50%;background:#fff;opacity:.55;transform:rotate(-20deg)}
+.rise-b::after{content:"";position:absolute;left:50%;top:100%;width:1.5px;height:70px;background:rgba(74,52,38,.35)}
+@keyframes riseUp{0%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(var(--sw),-65vh) rotate(6deg)}100%{transform:translate(0,-140vh) rotate(-4deg)}}
+.big-text{position:fixed;left:50%;top:40%;z-index:26;font-family:var(--font-script);font-size:clamp(64px, 19vw, 124px);line-height:1;color:var(--c);white-space:nowrap;pointer-events:none;text-shadow:0 0 2px #fff, 0 3px 0 #fff, 0 12px 30px rgba(74,52,38,.25);opacity:0;animation:bigPop 2.2s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes bigPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-8deg)}16%{opacity:1;transform:translate(-50%,-50%) scale(1.12) rotate(3deg)}28%{transform:translate(-50%,-50%) scale(1) rotate(0)}78%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-75%) scale(.9)}}
 .toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top, 0px));z-index:35;transform:translate(-50%,-20px);opacity:0;padding:10px 18px;border-radius:999px;background:var(--paper);color:var(--ink);font-weight:800;font-size:16px;border:2.5px solid var(--tc, var(--tan));box-shadow:0 10px 24px -12px rgba(74,52,38,.6);transition:opacity .25s, transform .25s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- Menú tipo libro ---------- */
-.rsvp-banner{display:flex;flex-wrap:wrap;align-items:center;gap:14px 16px;padding:20px 20px;border-radius:24px;background:var(--accent);color:var(--paper);box-shadow:0 16px 30px -18px rgba(74,52,38,.7)}
+.rsvp-banner{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px 16px;padding:18px 20px;border-radius:24px;background:var(--accent);color:var(--paper);box-shadow:0 16px 30px -18px rgba(74,52,38,.7)}
 .rb-icon{flex:none;width:54px;height:54px;border-radius:16px;background:rgba(255,251,246,.16);display:grid;place-items:center}
 .rb-text{flex:1 1 170px;min-width:0;display:flex;flex-direction:column;line-height:1.2}
 .rb-label{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.9}
 .rb-text strong{font-family:var(--font-serif);font-weight:600;font-size:27px;margin-top:3px}
 .rb-time{font-size:18px;font-weight:800}
-.rb-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;background:var(--paper);color:var(--accent);font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.rb-btn{flex:none;margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:999px;background:var(--paper);color:var(--accent);font-weight:800;font-size:16px;text-decoration:none;box-shadow:0 3px 0 rgba(0,0,0,.15)}
 .rb-btn:active{transform:scale(.96)}
 .rb-btn:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
 .pay-note{display:flex;gap:14px;align-items:flex-start;padding:18px 20px}
@@ -396,6 +406,12 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
     <p class="lead">Hay una personita muy especial que ya llena nuestras vidas de amor, y queremos compartir con ustedes la alegría de descubrir quién viene en camino.</p>
   </section>
 
+  <div class="rsvp-banner reveal" aria-label="Fecha límite para confirmar">
+    <span class="rb-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18M8.5 15.5l2.2 2.2 4.8-4.8"></path></svg></span>
+    <span class="rb-text"><span class="rb-label">Confirmá a más tardar el</span><strong>Jueves 5 de noviembre</strong><span class="rb-time">antes de las 5:00 p.m.</span></span>
+    <a class="rb-btn" href="#t-rsvp">Confirmar</a>
+  </div>
+
   <section class="reveal" aria-labelledby="t-lugar">
     <h2 class="section-title" id="t-lugar">Nos vemos en</h2>
     <div class="card place">
@@ -434,12 +450,6 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
         Waze
       </a>
     </div>
-  </section>
-
-  <section class="rsvp-banner reveal" aria-label="Fecha límite para confirmar">
-    <span class="rb-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18M8.5 15.5l2.2 2.2 4.8-4.8"></path></svg></span>
-    <span class="rb-text"><span class="rb-label">Confirmá a más tardar el</span><strong>Jueves 5 de noviembre</strong><span class="rb-time">antes de las 5:00 p.m.</span></span>
-    <a class="rb-btn" href="#t-rsvp">Confirmar</a>
   </section>
 
   <section class="reveal" aria-labelledby="t-menu">
@@ -500,37 +510,6 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
     <p class="cd-done" id="cd-done" hidden>¡Hoy es el gran día!</p>
   </section>
 
-  <section class="reveal" aria-labelledby="t-juego">
-    <h2 class="section-title" id="t-juego">¡También queremos jugar a adivinar!</h2>
-    <div class="bets">
-      <button class="bet" type="button" data-bet="niño" aria-pressed="false">
-        <span class="mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
-        <span class="q">Si creés que es</span>
-        <span class="big">Niño</span>
-        <svg class="icon" width="58" height="46" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 10h52l-3 10c-2 13-11 22-23 22S11 33 9 20z"></path>
-          <path d="M6 10c0 6 4 10 10 10M58 10c0 6-4 10-10 10"></path>
-          <path d="M32 26c-2-3-6-1-4 2l4 4 4-4c2-3-2-5-4-2z" fill="currentColor"></path>
-        </svg>
-        <span class="bring">Traé un paquetito de <strong>pañales</strong></span>
-        <span class="tap-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para elegir</span>
-      </button>
-      <button class="bet" type="button" data-bet="niña" aria-pressed="false">
-        <span class="mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
-        <span class="q">Si creés que es</span>
-        <span class="big">Niña</span>
-        <svg class="icon" width="58" height="46" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="6" y="16" width="52" height="26" rx="8"></rect>
-          <path d="M24 16c2-8 14-10 16-2M26 16c4-4 10-4 12 0"></path>
-          <path d="M32 33c-2-3-6-1-4 2l4 4 4-4c2-3-2-5-4-2z" fill="currentColor"></path>
-        </svg>
-        <span class="bring">Traé un paquetito de <strong>toallitas húmedas</strong></span>
-        <span class="tap-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para elegir</span>
-      </button>
-    </div>
-    <p class="bet-msg" id="bet-msg" aria-live="polite">¡Será una linda forma de empezar a llenar de amor y cositas la llegada de nuestro bebé!</p>
-  </section>
-
   <section class="reveal" aria-labelledby="t-vest">
     <h2 class="section-title" id="t-vest">Código de vestimenta</h2>
     <div class="card dress">
@@ -546,7 +525,7 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
   </section>
 
   <section class="reveal" aria-labelledby="t-rsvp">
-    <h2 class="section-title" id="t-rsvp">Confirmá tu asistencia</h2>
+    <h2 class="section-title" id="t-rsvp">Confirmá tu asistencia y adiviná</h2>
     <form class="card rsvp" id="rsvp" novalidate>
       <p class="deadline">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"></rect><path d="M16 2v4M8 2v4M3 10h18M8.5 15.5l2.2 2.2 4.8-4.8"></path></svg>
@@ -564,6 +543,37 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
           <button type="button" id="plus" aria-label="Agregar una persona">+</button>
         </div>
       </div>
+      <fieldset class="field bet-field">
+        <legend class="label">¿Qué creés que será?</legend>
+        <p class="bet-intro">Es parte del juego: si creés que es niño, traé un paquetito de pañales; si creés que es niña, uno de toallitas húmedas.</p>
+      <div class="bets">
+        <button class="bet" type="button" data-bet="niño" aria-pressed="false">
+          <span class="mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
+          <span class="q">Si creés que es</span>
+          <span class="big">Niño</span>
+          <svg class="icon" width="58" height="46" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 10h52l-3 10c-2 13-11 22-23 22S11 33 9 20z"></path>
+            <path d="M6 10c0 6 4 10 10 10M58 10c0 6-4 10-10 10"></path>
+            <path d="M32 26c-2-3-6-1-4 2l4 4 4-4c2-3-2-5-4-2z" fill="currentColor"></path>
+          </svg>
+          <span class="bring">Traé un paquetito de <strong>pañales</strong></span>
+          <span class="tap-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para elegir</span>
+        </button>
+        <button class="bet" type="button" data-bet="niña" aria-pressed="false">
+          <span class="mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg></span>
+          <span class="q">Si creés que es</span>
+          <span class="big">Niña</span>
+          <svg class="icon" width="58" height="46" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="6" y="16" width="52" height="26" rx="8"></rect>
+            <path d="M24 16c2-8 14-10 16-2M26 16c4-4 10-4 12 0"></path>
+            <path d="M32 33c-2-3-6-1-4 2l4 4 4-4c2-3-2-5-4-2z" fill="currentColor"></path>
+          </svg>
+          <span class="bring">Traé un paquetito de <strong>toallitas húmedas</strong></span>
+          <span class="tap-tag"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V4.5a1.5 1.5 0 0 1 3 0V10"></path><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"></path><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L4 15.5a1.6 1.6 0 0 1 2.4-2.1L9 16"></path></svg>Tocá para elegir</span>
+        </button>
+      </div>
+        <p class="bet-msg" id="bet-msg" aria-live="polite">Tocá tu apuesta</p>
+      </fieldset>
       <a class="wa" id="wa" href="#" target="_blank" rel="noopener">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 20.5l1.8-5.2A8.4 8.4 0 1 1 21 11.5z"></path></svg>
         Confirmar por WhatsApp
@@ -631,6 +641,36 @@ document.querySelectorAll('[data-cfg]').forEach(el => { el.textContent = CONFIG[
   }
 })();
 
+/* Celebración al elegir niño o niña */
+function celebrate(kind){
+  const boy = kind === 'niño', cols = boy ? BLUE : PINK, solid = boy ? ['#8DBDE8','#6FA6DB','#B5D5F2','#9CC7EA'] : ['#F2A2BA','#E8869F','#F7C0D0','#F2A7BE'];
+  const W = innerWidth, H = innerHeight;
+  confetti(W * .5, H * .45, 170, cols, true);
+  setTimeout(() => { confetti(0, H, 130, cols, true, -Math.PI / 3); confetti(W, H, 130, cols, true, -Math.PI * 2 / 3); }, 220);
+  setTimeout(() => { confetti(W * .25, H * .35, 80, cols, true); confetti(W * .75, H * .35, 80, cols, true); }, 650);
+  setTimeout(() => { confetti(0, H * .7, 90, cols, true, -Math.PI / 4); confetti(W, H * .7, 90, cols, true, -Math.PI * 3 / 4); }, 1000);
+  sound.pop(); setTimeout(sound.pop, 160); setTimeout(sound.pop, 340); setTimeout(sound.pop, 1000);
+  if (!reduce){
+    const party = document.createElement('div'); party.className = 'party'; party.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 20; i++){
+      const b = document.createElement('span'); b.className = 'rise-b';
+      b.style.left = (Math.random() * 96) + '%';
+      b.style.setProperty('--c', solid[i % solid.length]);
+      b.style.setProperty('--s', (42 + Math.random() * 44) + 'px');
+      b.style.setProperty('--d', (2.6 + Math.random() * 1.8) + 's');
+      b.style.setProperty('--dl', (Math.random() * .9) + 's');
+      b.style.setProperty('--sw', ((Math.random() - .5) * 90) + 'px');
+      party.appendChild(b);
+    }
+    const t = document.createElement('div'); t.className = 'big-text'; t.textContent = boy ? '¡Team niño!' : '¡Team niña!';
+    t.style.setProperty('--c', boy ? '#4F86C2' : '#D9637F');
+    party.appendChild(t);
+    document.body.appendChild(party);
+    setTimeout(() => party.remove(), 5600);
+  }
+  toast(boy ? 'Apostaste por niño' : 'Apostaste por niña', boy ? '#6FA6DB' : '#E8869F');
+}
+
 /* Globos: al tocarlos revientan con confeti rosa o celeste */
 let toastT = null;
 function toast(msg, color){
@@ -686,13 +726,13 @@ const confetti = (function(){
   function size(){ cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
   size(); addEventListener('resize', size);
   const palette = ['#C9AA8C','#8A5A3C','#E8D7C3','#D9BFA2','#E3BFA8','#B98F6E'];
-  function burst(x, y, n, cols, force){
+  function burst(x, y, n, cols, force, aim){
     if (reduce && !force) return;
     if (reduce) n = Math.min(n, 30);
     const pal = cols || palette;
     for (let i = 0; i < n; i++){
-      const a = Math.random() * Math.PI * 2, sp = 4 + Math.random() * 9;
-      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 6, r: 5 + Math.random() * 6, c: pal[i % pal.length],
+      const a = aim === undefined ? Math.random() * Math.PI * 2 : aim + (Math.random() - .5) * .9, sp = aim === undefined ? 4 + Math.random() * 9 : 11 + Math.random() * 11;
+      parts.push({x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - (aim === undefined ? 6 : 0), r: 5 + Math.random() * 6, c: pal[i % pal.length],
         rot: Math.random() * 6, vr: (Math.random() - .5) * .3, shape: Math.random() < .35 ? 'h' : (Math.random() < .5 ? 'c' : 'r'), life: 0});
     }
     if (!running){ running = true; requestAnimationFrame(loop); }
@@ -887,8 +927,7 @@ const sound = (function(){
   }
   btns.forEach(b => b.addEventListener('click', () => {
     bet = b.dataset.bet; try { localStorage.setItem('apuesta', bet); } catch(e){}
-    paintBet(); buildLink(); sound.pop();
-    const r = b.getBoundingClientRect(); confetti(r.left + r.width/2, r.top + r.height/2, 70, bet === 'niño' ? BLUE : PINK);
+    paintBet(); buildLink(); celebrate(bet);
   }));
   document.getElementById('minus').addEventListener('click', () => { guests = Math.max(1, guests - 1); out.textContent = guests; buildLink(); });
   document.getElementById('plus').addEventListener('click', () => { guests = Math.min(12, guests + 1); out.textContent = guests; buildLink(); });
