@@ -224,8 +224,8 @@ footer .sig{font-family:var(--font-serif);font-style:italic;font-weight:600;font
 @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
 
 /* ---------- Animación de apertura ---------- */
-.intro{display:none}
-html.intro .intro{display:block;position:fixed;inset:0;z-index:60;overflow:hidden;cursor:pointer}
+.intro{position:fixed;inset:0;z-index:60;overflow:hidden;cursor:pointer;animation:introGone .01s linear 3.7s forwards}
+@keyframes introGone{to{visibility:hidden;pointer-events:none}}
 html.intro body{overflow:hidden}
 .intro-panel{position:absolute;top:0;bottom:0;width:50.5%;background-color:var(--cream);background-image:radial-gradient(rgba(201,170,140,.35) 1.3px, transparent 1.6px);background-size:18px 18px;animation:panelOut .9s cubic-bezier(.7,0,.25,1) 2.6s forwards}
 .intro-panel.l{left:0;--x:-102%;box-shadow:inset -10px 0 20px -14px rgba(74,52,38,.4)}
@@ -234,10 +234,10 @@ html.intro body{overflow:hidden}
 .intro-stage{position:absolute;inset:0;animation:stageOut .5s ease 2.45s forwards}
 @keyframes stageOut{to{opacity:0;transform:scale(1.06)}}
 .intro-balloons{position:absolute;inset:0}
-.ib{position:absolute;bottom:-160px;width:var(--s);height:calc(var(--s) * 1.2);border-radius:50% 50% 48% 52% / 55% 55% 45% 45%;background:var(--c);animation:ibUp var(--d) cubic-bezier(.2,.7,.3,1) var(--dl) both}
+.ib{position:absolute;bottom:-160px;width:var(--s);height:calc(var(--s) * 1.2);border-radius:50% 50% 48% 52% / 55% 55% 45% 45%;background:var(--c);animation:ibUp calc(var(--d) * 1.8) cubic-bezier(.3,.5,.5,1) var(--dl) both}
 .ib::before{content:"";position:absolute;left:20%;top:14%;width:22%;height:28%;border-radius:50%;background:#fff;opacity:.55;transform:rotate(-20deg)}
 .ib::after{content:"";position:absolute;left:50%;top:100%;width:1.5px;height:60px;background:var(--tan)}
-@keyframes ibUp{0%{transform:translateY(0) rotate(-8deg)}70%{transform:translateY(calc(-62vh - var(--s))) rotate(5deg)}100%{transform:translateY(calc(-58vh - var(--s))) rotate(0)}}
+@keyframes ibUp{0%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-60vh) rotate(6deg)}100%{transform:translateY(-130vh) rotate(-4deg)}}
 .intro-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center;width:min(92vw, 420px)}
 .intro-bear{width:min(46vw, 190px);height:auto;animation:bearIn .9s cubic-bezier(.2,1.5,.4,1) .15s both;transform-origin:50% 90%}
 @keyframes bearIn{0%{opacity:0;transform:translateY(40px) scale(.4) rotate(-12deg)}100%{opacity:1;transform:none}}
@@ -372,7 +372,6 @@ html.intro h1 .ch{animation-delay:calc(var(--i) * 60ms + 3000ms)}
 </head>
 <body>
 
-<script>try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro')}catch(e){}</script>
 <div class="intro" id="intro" aria-hidden="true">
   <div class="intro-panel l"></div><div class="intro-panel r"></div>
   <div class="intro-stage">
@@ -402,6 +401,7 @@ html.intro h1 .ch{animation-delay:calc(var(--i) * 60ms + 3000ms)}
     </div>
   </div>
 </div>
+<script>try{if(matchMedia('(prefers-reduced-motion: reduce)').matches){var _i=document.getElementById('intro');if(_i)_i.remove()}else{document.documentElement.classList.add('intro')}}catch(e){}</script>
 <div class="sky" id="sky"></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -515,7 +515,7 @@ html.intro h1 .ch{animation-delay:calc(var(--i) * 60ms + 3000ms)}
     <h2 class="section-title" id="t-menu">El menú del lugar</h2>
     <div class="card pay-note">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-3.5 4-3.5 7s1 4 3.5 4"></path></svg>
-      <p><strong>Cada invitado paga lo que consuma.</strong> Podés elegir lo que desees del menú. Los precios están en colones y el 10% de servicio no está incluido.</p>
+      <p>Para que cada quien disfrute a su gusto, <strong>cada invitado podrá elegir del menú lo que desee y cancelar su propio consumo</strong>. Los precios están en colones y no incluyen el 10% de servicio.</p>
     </div>
     <div class="book-wrap">
       <div class="book" id="book">
@@ -670,7 +670,9 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const done = () => { if (closed) return; closed = true; document.documentElement.classList.remove('intro'); el.remove(); };
   if (!document.documentElement.classList.contains('intro')){ el.remove(); return; }
   el.addEventListener('click', () => { el.querySelectorAll('.intro-panel,.intro-stage').forEach(n => n.style.animationDelay = '0s'); setTimeout(done, 900); });
-  setTimeout(done, 3600);
+  const panel = el.querySelector('.intro-panel');
+  if (panel) panel.addEventListener('animationend', done);
+  setTimeout(done, 7000);
 })();
 const PINK = ['#F2A7BE','#E8869F','#F7C6D4','#D9637F'], BLUE = ['#9CC7EA','#6FA6DB','#C4DFF5','#4F86C2'];
 document.querySelectorAll('[data-cfg]').forEach(el => { el.textContent = CONFIG[el.dataset.cfg]; });
